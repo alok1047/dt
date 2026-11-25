@@ -1,0 +1,25 @@
+{
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "name": "dt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KARTIK001-CODER/DT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KARTIK001-CODER/DT/issues"
+  },
+  "homepage": "https://github.com/KARTIK001-CODER/DT#readme",
+  "dependencies": {
+    "express": "^5.3.0",
+    "zod": "^4.6.7"
+  }
+}
