@@ -2,8 +2,10 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "node src/scripts/test-schema-and-indexes.js",
-    "test:screenshot": "node src/scripts/generate-screenshot.js"
+    "test": "node src/scripts/test-day4-fitness.js",
+    "test:day3": "node src/scripts/test-schema-and-indexes.js",
+    "test:day4": "node src/scripts/test-day4-fitness.js",
+    "test:screenshot": "node src/scripts/generate-day4-screenshot.js"
   },
   "name": "dt",
   "version": "1.0.0",

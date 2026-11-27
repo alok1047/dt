@@ -1,0 +1,45 @@
+══════════════════════════════════════════════════════════════════════════════════
+   DAY 4: EXPRESS MIDDLEWARE & VALIDATION VERIFICATION TEST RUNNER   
+   Context: Fitness Coaching App (Workout Plans & Progress Analytics)       
+══════════════════════════════════════════════════════════════════════════════════
+
+✓ Test Express server active on: http://127.0.0.1:59407
+
+[PART 1] VALID REQUESTS DEMONSTRATION
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 1: Valid Workout Plan Creation (POST /api/v1/fitness/workout-plans)
+         Status: 201 | Plan ID: plan_2e203202-2099-4868-907d-a7b13cc2e078 | Total Sets: 10 | Est. Duration: 34m | Request-ID: req_55bbda95-8d5b-4c27-95da-a3f26a98586f
+  [PASS] Test 2: Valid Progress Analytics Log (POST /api/v1/fitness/progress-logs)
+         Status: 201 | Total Volume Load: 5600 kg | Strain Index: 52 | Cal: 520 | Request-ID: req_87d0c29a-e0ee-44a5-b2f6-595e777e2348
+  [PASS] Test 3: Valid Analytics Retrieval (GET /api/v1/fitness/analytics/:clientId)
+         Status: 200 | Sessions: 1 | Total Load: 5600 kg | Avg RPE: 8
+
+[PART 2] INVALID REQUESTS & VALIDATION ERROR HANDLING DEMONSTRATION
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 4: Missing Required Fields Rejection (422 Unprocessable Entity)
+         Status: 422 | Code: VALIDATION_ERROR | Detected 7 missing required field violations
+  [PASS] Test 5: Type & Out-of-Bounds Range Constraints (422 Unprocessable Entity)
+         Status: 422 | Detected invalid fields: [clientId, coachId, planName, targetGoal...]
+  [PASS] Test 6: Malformed JSON Body Handling (400 Bad Request)
+         Status: 400 | Code: MALFORMED_JSON | Message: "Invalid JSON payload received in request body"
+
+[PART 3] DOMAIN-SPECIFIC EDGE CASES DEMONSTRATION
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 7: EDGE CASE 1: Future Workout Timestamp / Temporal Causality Breach
+         Status: 422 | Field: sessionDate | Rejection Message: "sessionDate cannot be in the future. Cannot record progress analytics for an uncompleted future workout."
+  [PASS] Test 8: EDGE CASE 2: Physiological Safety Violation (Max RPE 10 with 0s Rest)
+         Status: 422 | Field: exercises.0.restSeconds | Safety Rule Message: "Near-maximal exertion (RPE >= 9.5) requires a minimum rest interval of 60 seconds."
+  [PASS] Test 9: EDGE CASE 3: Duplicate Exercise Routine Collision in Single Plan
+         Status: 422 | Rejection Message: "Duplicate exercise 'Barbell Bench Press' detected in workout plan. Aggregate sets into a single exercise entry."
+
+[PART 4] CUSTOM MIDDLEWARE & CENTRALIZED ERROR HANDLING VERIFICATION
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 10: 404 Route Not Found via Centralized Error Handler
+         Status: 404 | Code: NOT_FOUND | Message: "Route 'GET /api/v1/fitness/unknown-action' does not exist on this server" | Request-ID: req_ce575c86-1f44-48c7-93da-c7d0080ad8b5
+  [PASS] Test 11: Request ID Upstream Header Preservation & Propagation
+         Preserved Inbound ID: "trace_client_audit_778899" -> Echoed In Header: "trace_client_audit_778899"
+
+══════════════════════════════════════════════════════════════════════════════════
+TEST SUMMARY: 11 / 11 TESTS PASSED (100% SUCCESS RATE)
+══════════════════════════════════════════════════════════════════════════════════
+✓ Test Express server cleanly terminated.
