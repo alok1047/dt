@@ -3,6 +3,7 @@ const requestIdMiddleware = require("./middlewares/requestId");
 const { requestLoggerMiddleware } = require("./middlewares/logger");
 const { notFoundHandler, errorHandler } = require("./middlewares/errorHandler");
 const { router: fitnessRouter } = require("./routes/fitnessRoutes");
+const { transitRouter } = require("./day6-auth/transitRoutes");
 
 function createApp(options = {}) {
   const app = express();
@@ -18,6 +19,10 @@ function createApp(options = {}) {
 
   // 4. Fitness Coaching App Routes (Day 4 Context)
   app.use("/api/v1/fitness", fitnessRouter);
+
+  // 5. Public Transport Companion Auth & Transit Routes (Day 6 Context)
+  app.use("/api/v1/auth", transitRouter);
+  app.use("/api/v1/transit", transitRouter);
 
   // 5. Preserved Legacy Monitoring Routes (Day 1-2 Context)
   let thresholds = {
