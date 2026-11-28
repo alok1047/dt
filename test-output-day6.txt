@@ -1,0 +1,57 @@
+══════════════════════════════════════════════════════════════════════════════════
+   DAY 6: AUTHENTICATION & AUTHORIZATION VERIFICATION TEST RUNNER   
+   Context: Public Transport Companion (Route Search & Disruptions)   
+══════════════════════════════════════════════════════════════════════════════════
+
+✓ Test Transit Auth server running on: http://127.0.0.1:58050
+
+[PART 1] BCRYPT PASSWORD HASHING & CREDENTIAL VERIFICATION
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 1: Password Hashing with bcrypt (Salt Rounds = 10)
+         Hash prefix: "$2b$10$..." | Verified correct password & rejected wrong password
+
+[PART 2] JWT LOGIN FLOW & ROLE TOKEN ISSUANCE
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 2: Commuter Login & JWT Issuance (Role: commuter)
+         Status: 200 | User: Alice Commuter | Role: commuter | Token prefix: eyJhbGciOiJIUzI1NiIs...
+  [PASS] Test 3: Transit Operator Login & JWT Issuance (Role: operator)
+         Status: 200 | User: Dan Dispatcher | Role: operator
+  [PASS] Test 4: Transit Authority Admin Login & JWT Issuance (Role: admin)
+         Status: 200 | User: Sarah SuperAdmin | Role: admin
+  [PASS] Test 5: Login Failure: Invalid Password Credentials (401 Unauthorized)
+         Status: 401 | Code: INVALID_CREDENTIALS | Message: "Invalid email or password credentials."
+
+[PART 3] PUBLIC TRANSIT COMPANION ROUTES (UNAUTHENTICATED COMMUTER ACCESS)
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 6: Public Route Search (GET /api/v1/transit/routes/search)
+         Status: 200 | Found 2 routes without authentication tokens
+
+[PART 4] ROLE-BASED ACCESS CONTROL: DISRUPTION MANAGEMENT
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 7: Authorized Operator Notice Publishing (POST /api/v1/transit/disruptions)
+         Status: 201 | Disruption ID: disr_abc6f3f5 | Reported By: Dan Dispatcher (operator)
+  [PASS] Test 8: FAILURE CASE 1: Commuter Role Escalation Blocked (403 Forbidden)
+         Status: 403 | Code: FORBIDDEN_ROLE | Message: "Access forbidden. This action requires one of the following roles: [operator, admin]. Current user role: 'commuter'."
+
+[PART 5] RESOURCE OWNERSHIP & PRIVILEGE ISOLATION
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 9: Commuter Accessing Own Profile (GET /users/usr_alice/favorites)
+         Status: 200 | Owner: usr_alice | Favorites: [subway_line_1_red, express_bus_42]
+  [PASS] Test 10: FAILURE CASE 2: Cross-User Ownership Violation Blocked (403 Forbidden)
+         Status: 403 | Code: FORBIDDEN_OWNERSHIP | Message: "Access forbidden. You do not have permission to view or modify another commuter's private travel data."
+  [PASS] Test 11: Admin Privilege Override: Inspecting Commuter Account (200 OK)
+         Status: 200 | Admin Sarah inspected User: usr_bob
+
+[PART 6] TOKEN EXPIRY & CRYPTOGRAPHIC TAMPERING DEFENSE
+──────────────────────────────────────────────────────────────────────────────────
+  [PASS] Test 12: FAILURE CASE 3: Missing Token Rejection (401 Unauthorized)
+         Status: 401 | Code: TOKEN_REQUIRED | Message: "Authentication required. Missing 'Authorization: Bearer <token>' header."
+  [PASS] Test 13: FAILURE CASE 4: Tampered JWT Signature Rejection (401 Unauthorized)
+         Status: 401 | Code: INVALID_TOKEN | Message: "Invalid or tampered access token signature."
+  [PASS] Test 14: FAILURE CASE 5: Expired Access Token Rejection (401 Unauthorized)
+         Status: 401 | Code: TOKEN_EXPIRED | Expired At: 2026-11-28T05:45:11.000Z
+
+══════════════════════════════════════════════════════════════════════════════════
+TEST SUMMARY: 14 / 14 TESTS PASSED (100% SUCCESS RATE)
+══════════════════════════════════════════════════════════════════════════════════
+✓ Test Transit Auth server cleanly terminated.

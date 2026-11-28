@@ -2,10 +2,14 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "node src/scripts/test-day4-fitness.js",
+    "test": "node src/scripts/test-day5-react.js && node src/scripts/test-day6-auth.js",
     "test:day3": "node src/scripts/test-schema-and-indexes.js",
     "test:day4": "node src/scripts/test-day4-fitness.js",
-    "test:screenshot": "node src/scripts/generate-day4-screenshot.js"
+    "test:day5": "node src/scripts/test-day5-react.js",
+    "test:day6": "node src/scripts/test-day6-auth.js",
+    "test:all": "node src/scripts/test-day4-fitness.js && node src/scripts/test-day5-react.js && node src/scripts/test-day6-auth.js",
+    "screenshot:day5": "node src/scripts/generate-day5-screenshot.js",
+    "screenshot:day6": "node src/scripts/generate-day6-screenshot.js"
   },
   "name": "dt",
   "version": "1.0.0",
@@ -23,7 +27,11 @@
   },
   "homepage": "https://github.com/KARTIK001-CODER/DT#readme",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
